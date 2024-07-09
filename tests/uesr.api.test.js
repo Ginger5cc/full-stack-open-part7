@@ -22,13 +22,13 @@ describe('when there is initially one user in db', () => {
     await user.save()
   })
 
-  test.only('creation succeeds with a fresh username', async () => {
+  test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
-
+    console.log(`usersAtStart is ${usersAtStart}`)
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+      username: 'try',
+      name: 'try try',
+      password: '123456789',
     }
 
     await api
