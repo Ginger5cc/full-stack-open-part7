@@ -127,7 +127,7 @@ test('delete a blog', async() => {
 })
 
 //ex 4.14
-test.only('update the author and likes of a blog with the same title', async() => {
+test('update the author and likes of a blog with the same title', async() => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = _.find(blogsAtStart, {title: "Promises do not always work"})
 
@@ -151,7 +151,7 @@ test.only('update the author and likes of a blog with the same title', async() =
 })
 
 //ex 4.14
-test.only('update the likes of a blog with the same title and author', async() => {
+test('update the likes of a blog with the same title and author', async() => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = _.find(blogsAtStart, {title: "Promises do not always work"})
   
