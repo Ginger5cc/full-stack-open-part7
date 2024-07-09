@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notifications'
 
 const App = () => {
+  const tempError = {content: 'some error happened...', type: "notice"}
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,12 +47,12 @@ const App = () => {
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       ) 
-      
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage({content: 'Wrong credentials', type: 'error'})
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -56,7 +62,7 @@ const App = () => {
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        username
+        username: 
           <input
           type="text"
           value={username}
@@ -65,7 +71,7 @@ const App = () => {
         />
       </div>
       <div>
-        password
+        password: 
           <input
           type="password"
           value={password}
@@ -77,11 +83,68 @@ const App = () => {
     </form>      
   )
 
+  const handleCreate = async( event ) => {
+    event.preventDefault()
+    try{
+      const newBlog = await blogService.create({title, author, url})
+      
+      setBlogs( blogs.concat(newBlog) )
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setErrorMessage({
+        content: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        type: 'notice'
+      })
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage({content: 'Missing Content', type: 'error'})
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const createBlogForm = () => (
+    <form onSubmit={handleCreate}>
+      <div>
+        title: 
+          <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author: 
+          <input
+          type="text"
+          value={author}
+          name="Author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url: 
+          <input
+          type="text"
+          value={url}
+          name="Url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">create</button>
+    </form>
+  )
 
 if (user === null) {
   return (
     <div>
       <h2>Log in to application</h2>
+      <Notification errorMessage={errorMessage} />
       {loginForm()}
     </div>
   )
@@ -89,10 +152,13 @@ if (user === null) {
 
 return (
   <div>
-    <h2>blogs</h2>
+    <h2>Blogs</h2>
+    <Notification errorMessage={errorMessage} />
     <form onSubmit={handleLogout}>
     <p>{user.username} logged in <button type="submit">logout</button></p>
     </form>
+    <h2>Create New Blogs</h2>
+    {createBlogForm()}
     <p></p>
     {blogs.map(blog =>
       <Blog key={blog.id} blog={blog} />
