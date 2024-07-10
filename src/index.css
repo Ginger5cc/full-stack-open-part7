@@ -19,3 +19,16 @@ padding: 10px;
 margin-bottom: 10px;
 width:  500px;
 }
+
+.bloglist {
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 1px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-left : 10px;
+}
+
