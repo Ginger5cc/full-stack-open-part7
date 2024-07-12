@@ -17,7 +17,7 @@ blogsRouter.post('/', middleware.userExtractor, async(request, response) => {
   
   const blog = new Blog ({
     title: body.title,
-    autor: body.author || 'default author',
+    author: body.author || 'default author',
     url: body.url,
     likes: body.likes || 0,
     user: user._id
@@ -35,13 +35,13 @@ blogsRouter.delete('/:id', middleware.userExtractor,  async(request, response) =
   const blog = await Blog.findById(request.params.id)
   console.log(`blog id is ${blog.id}`)
   console.log(`blog user id is ${blog.user}`)
-  console.log(`user id is ${user.id}`)
+  console.log("hello world")
+  
   if ( blog.user.toString() === user.id.toString() ){
     const delBlog = await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
   } else return response.status(401).json({ error: 'invalid user' })
 
-  
 })
 
 
