@@ -6,20 +6,21 @@ import Notification from './components/Notifications'
 import CreateBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
 
+
 const App = () => {
-  
+
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
-  
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -46,13 +47,13 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage({content: 'Wrong credentials', type: 'error'})
+      setErrorMessage({ content: 'Wrong credentials', type: 'error' })
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -62,8 +63,8 @@ const App = () => {
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        username: 
-          <input
+        username:
+        <input
           type="text"
           value={username}
           name="Username"
@@ -71,8 +72,8 @@ const App = () => {
         />
       </div>
       <div>
-        password: 
-          <input
+        password:
+        <input
           type="password"
           value={password}
           name="Password"
@@ -80,11 +81,11 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const handleCreate = async( blogObject ) => {
-    
+
     try{
       blogFormRef.current.toggleVisibility()
       const newBlog = await blogService.create(blogObject)
@@ -100,7 +101,7 @@ const App = () => {
       }, 5000)
     } catch (exception) {
       console.log(exception)
-      setErrorMessage({content: 'please log in again' , type: 'error'})
+      setErrorMessage({ content: 'please log in again' , type: 'error' })
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -108,7 +109,7 @@ const App = () => {
   }
 
   const handleUpdate = async( id, blogObject ) => {
-    
+
     try{
       await blogService.update(id, blogObject)
       const blogs = await blogService.getAll()
@@ -124,7 +125,7 @@ const App = () => {
       }, 5000)
     } catch (exception) {
       console.log(exception)
-      setErrorMessage({content: exception.message , type: 'error'})
+      setErrorMessage({ content: exception.message , type: 'error' })
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -148,43 +149,43 @@ const App = () => {
       }, 5000)
     } catch (exception) {
       console.log(exception)
-      setErrorMessage({content: 'cannot delete' , type: 'error'})
+      setErrorMessage({ content: 'cannot delete' , type: 'error' })
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
-  
 
-if (user === null) {
+
+  if (user === null) {
+    return (
+      <div>
+        <h2>Log in to application</h2>
+        <Notification errorMessage={errorMessage} />
+        {loginForm()}
+      </div>
+    )
+  }
+
   return (
     <div>
-      <h2>Log in to application</h2>
+      <h2>Blogs</h2>
       <Notification errorMessage={errorMessage} />
-      {loginForm()}
+      <form onSubmit={handleLogout}>
+        <p>{user.username} logged in <button type="submit">logout</button></p>
+      </form>
+      <h2>Create New Blogs</h2>
+      <Togglable buttonLabel='create a blog' ref={blogFormRef} >
+        <CreateBlogForm
+          create = {handleCreate}
+        />
+      </Togglable>
+      <p></p>
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} addLike={handleUpdate} remove={handleRemove} />
+      )}
     </div>
-  )
-}
-
-return (
-  <div>
-    <h2>Blogs</h2>
-    <Notification errorMessage={errorMessage} />
-    <form onSubmit={handleLogout}>
-    <p>{user.username} logged in <button type="submit">logout</button></p>
-    </form>
-    <h2>Create New Blogs</h2>
-    <Togglable buttonLabel ='create new blog' ref={blogFormRef} >
-      <CreateBlogForm
-        create = {handleCreate}
-      /> 
-    </Togglable>
-    <p></p>
-    {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} addLike={handleUpdate} remove={handleRemove} />
-    )}
-  </div>
-)}
+  )}
 
 
 export default App

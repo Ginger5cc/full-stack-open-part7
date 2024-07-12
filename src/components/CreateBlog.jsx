@@ -1,50 +1,54 @@
-import { useState } from "react"
+import { useState } from 'react'
+import React from 'react'
 
 const CreateBlogForm = ({ create }) => {
 
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
-    const createa = (event) => {
-        event.preventDefault()
-        create({title, author, url})
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-    }
+  const createa = (event) => {
+    event.preventDefault()
+    create({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
-    return (
+  return (
     <form onSubmit={createa}>
       <div>
-        title: 
-          <input
+        title:
+        <input
           type="text"
           value={title}
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
+          placeholder='Title'
         />
       </div>
       <div>
-        author: 
-          <input
+        author:
+        <input
           type="text"
           value={author}
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
+          placeholder='Author'
         />
       </div>
       <div>
-        url: 
-          <input
+        url:
+        <input
           type="text"
           value={url}
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
+          placeholder='Url'
         />
       </div>
       <button type="submit">create</button>
     </form>
-    )
+  )
 }
 export default CreateBlogForm
