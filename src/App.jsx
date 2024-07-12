@@ -69,6 +69,7 @@ const App = () => {
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
+          data-testid='username'
         />
       </div>
       <div>
@@ -78,6 +79,7 @@ const App = () => {
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
+          data-testid='password'
         />
       </div>
       <button type="submit">login</button>
@@ -147,8 +149,8 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    } catch (exception) {
-      console.log(exception)
+    } catch (error) {
+      console.error(error.response.data)
       setErrorMessage({ content: 'cannot delete' , type: 'error' })
       setTimeout(() => {
         setErrorMessage(null)
@@ -182,7 +184,7 @@ const App = () => {
       </Togglable>
       <p></p>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} addLike={handleUpdate} remove={handleRemove} />
+        <Blog key={blog.id} blog={blog} addLike={handleUpdate} remove={handleRemove} user={user}/>
       )}
     </div>
   )}

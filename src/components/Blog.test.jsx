@@ -19,11 +19,13 @@ describe('<Blog />', () => {
 
 
   beforeEach(() => {
-    render(<Blog blog={blog} />)
+    const user = userEvent.setup()
+
+    render(<Blog blog={blog} user={user}/>)
   })
 
   test('at start only show title and author without url and likes', async () => {
-    const element = screen.getByTestId('toggleShow')
+    const element = screen.getByRole('toggleShow')
     expect(element).toHaveTextContent(
       'Component testing is done with react-testing-library by Christy'
     )
@@ -70,7 +72,7 @@ describe('Test Like button and Create Button', () => {
     const addLike = vi.fn()
     const user = userEvent.setup()
 
-    render(<Blog blog={blog} addLike={addLike}/>)
+    render(<Blog blog={blog} addLike={addLike} user={user}/>)
     const button = screen.getByText('View')
     await user.click(button)
     const likeButton = screen.getByText('like')
