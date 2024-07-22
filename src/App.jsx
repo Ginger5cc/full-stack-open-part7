@@ -5,14 +5,16 @@ import loginService from './services/login'
 import Notification from './components/Notifications'
 import CreateBlogForm from './components/CreateBlog'
 import Togglable from './components/Togglable'
+import { useDispatch } from 'react-redux'
+import { changeMessage } from './reducers/messageReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -47,9 +49,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage({ content: 'Wrong credentials', type: 'error' })
+      dispatch(changeMessage({ content: 'Wrong credentials', type: 'error' }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     }
   }
@@ -87,18 +89,18 @@ const App = () => {
       const blogs = await blogService.getAll()
       setBlogs(blogs)
       console.log(blogs)
-      setErrorMessage({
+      dispatch(changeMessage({
         content: `a new blog ${newBlog.title} by ${newBlog.author} added`,
         type: 'notice',
-      })
+      }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     } catch (exception) {
       console.log(exception)
-      setErrorMessage({ content: 'please log in again', type: 'error' })
+      dispatch(changeMessage({ content: 'please log in again', type: 'error' }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     }
   }
@@ -110,18 +112,18 @@ const App = () => {
       const sort = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(sort)
 
-      setErrorMessage({
+      dispatch(changeMessage({
         content: `like ${blogObject.title}`,
         type: 'notice',
-      })
+      }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     } catch (exception) {
       console.log(exception)
-      setErrorMessage({ content: exception.message, type: 'error' })
+      dispatch(changeMessage({ content: exception.message, type: 'error' }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     }
   }
@@ -134,18 +136,18 @@ const App = () => {
       const sort = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(sort)
 
-      setErrorMessage({
+      dispatch(changeMessage({
         content: `Deleted ${blogObject.title}`,
         type: 'notice',
-      })
+      }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     } catch (error) {
       console.error(error.response.data)
-      setErrorMessage({ content: 'cannot delete', type: 'error' })
+      dispatch(changeMessage({ content: 'cannot delete', type: 'error' }))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(changeMessage(null))
       }, 5000)
     }
   }
@@ -154,7 +156,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification errorMessage={errorMessage} />
+        <Notification />
         {loginForm()}
       </div>
     )
@@ -163,7 +165,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification errorMessage={errorMessage} />
+      <Notification />
       <form onSubmit={handleLogout}>
         <p>
           {user.username} logged in <button type="submit">logout</button>
