@@ -1,36 +1,57 @@
 import { createSlice } from '@reduxjs/toolkit'
+import blogService from '../services/blogs'
 
-const initialState = [
-  {
-    content: 'reducer defines how redux store works',
-    important: true,
-    id: 1,
-  },
-  {
-    content: 'state of store can contain any data',
-    important: false,
-    id: 2,
-  },
-]
-
-const generateId = () =>
-  Number((Math.random() * 1000000).toFixed(0))
+const initialState = []
 
 
 const blogSlice = createSlice({
-  name: 'notes',
+  name: 'blogs',
   initialState,
   reducers: {
-    createNote(state, action) {
-      const content = action.payload
-      state.push({
-        content,
-        important: false,
-        id: generateId(),
-      })
+    appendBlog(state, action) {
+      state.push(action.payload)
     },
-    
+    setBlog(state, action) {
+      return action.payload
+    },
+    removeBlog (state, action) {
+      state = state.filter( n => n.id != action.payload)
+      console.log('payload is', action.payload)
+      console.log('state is', state)
+      return state
+    },
+    addLikeUpdate (state, action) {
+      state.map( n => n.id === action.payload ? n.likes++ : n)
+    },
   },
 })
 
+export const { appendBlog, setBlog, removeBlog, addLikeUpdate } = blogSlice.actions
 export default blogSlice.reducer
+
+export const initializeBlogs = () => {
+  return async dispatch => {
+    const blogs = await blogService.getAll()
+    dispatch(setBlog(blogs))
+  }
+}
+export const createBlog = content => {
+  return async dispatch => {
+    const newBlog = await blogService.create(content)
+    dispatch(appendBlog(newBlog))
+  }
+}
+
+export const deleteBlog = id => {
+  return async dispatch => {
+    await blogService.remove(id)
+    dispatch(removeBlog(id))
+  }
+}
+
+export const addLike = (id, newContent) => {
+  return async dispatch => {
+    await blogService.update(id, newContent)
+    dispatch(addLikeUpdate(id))
+  }
+}

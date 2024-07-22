@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import React from 'react'
 
-const Blog = ({ blog, addLike, remove, user }) => {
+const Blog = ({ blog, remove, addLike, user }) => {
   const [showMore, setShowMore] = useState(false)
 
   const toggle = () => {
@@ -22,7 +22,6 @@ const Blog = ({ blog, addLike, remove, user }) => {
     if (window.confirm(`remove ${blog.title} by ${blog.author}`)) {
       remove(blog.id, blog)
     }
-    //remove(blog.id, blog)
   }
 
   let hideWhenShow = { display: showMore ? 'none' : '' }
