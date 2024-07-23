@@ -18,7 +18,7 @@ module.exports = {
   settings: { react: { version: "18.2" } },
   plugins: ["react-refresh"],
   rules: {
-    indent: ["error", 2],
+    indent: ["error", 4],
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "single"],
     semi: ["error", "never"],
@@ -30,5 +30,6 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
     "no-unused-vars": 0,
+    
   },
 };

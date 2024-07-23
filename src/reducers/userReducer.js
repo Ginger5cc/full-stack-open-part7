@@ -1,19 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
-import loginService from '../services/blogs'
 
-const initialState = []
-
+const initialState = null
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
         loginUser(state, action) {
-        return action.payload
+            return action.payload
         }
-    }   
+    }
 })
-    
+
 
 export const { loginUser } = userSlice.actions
 export default userSlice.reducer

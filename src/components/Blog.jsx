@@ -1,69 +1,71 @@
 import { useState } from 'react'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Blog = ({ blog, remove, addLike, user }) => {
-  const [showMore, setShowMore] = useState(false)
+const Blog = ({ blog, remove, addLike }) => {
+    const user  = useSelector(state => state.user)
+    const [showMore, setShowMore] = useState(false)
 
-  const toggle = () => {
-    setShowMore(!showMore)
-  }
-
-  const likeClick = () => {
-    const blogAddlike = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
+    const toggle = () => {
+        setShowMore(!showMore)
     }
-    addLike(blog.id, blogAddlike)
-  }
 
-  const removeClick = () => {
-    if (window.confirm(`remove ${blog.title} by ${blog.author}`)) {
-      remove(blog.id, blog)
+    const likeClick = () => {
+        const blogAddlike = {
+            title: blog.title,
+            author: blog.author,
+            url: blog.url,
+            likes: blog.likes + 1,
+        }
+        addLike(blog.id, blogAddlike)
     }
-  }
 
-  let hideWhenShow = { display: showMore ? 'none' : '' }
-  let showWhenShow = { display: showMore ? '' : 'none' }
-  let sameUser = { display: user.id === blog.user.id ? '' : 'none' }
+    const removeClick = () => {
+        if (window.confirm(`remove ${blog.title} by ${blog.author}`)) {
+            remove(blog.id, blog)
+        }
+    }
 
-  return (
-    <div data-testid="toggleElement">
-      <div
-        style={hideWhenShow}
-        className="bloglist"
-        data-testid={`toggleShow${blog.title}`}
-        role="toggleShow"
-      >
-        {blog.title} by {blog.author}
-        <button onClick={toggle} data-testid={`view${blog.title}`}>
+    let hideWhenShow = { display: showMore ? 'none' : '' }
+    let showWhenShow = { display: showMore ? '' : 'none' }
+    let sameUser = { display: user.id === blog.user.id ? '' : 'none' }
+
+    return (
+        <div data-testid="toggleElement">
+            <div
+                style={hideWhenShow}
+                className="bloglist"
+                data-testid={`toggleShow${blog.title}`}
+                role="toggleShow"
+            >
+                {blog.title} by {blog.author}
+                <button onClick={toggle} data-testid={`view${blog.title}`}>
           View
-        </button>
-      </div>
-      <div style={showWhenShow} className="bloglist" data-testid="toggleHide">
-        <p>
-          {blog.title}
-          <button onClick={toggle}>hide</button>
-        </p>
-        <p>{blog.url}</p>
-        <p data-testid={`likeField${blog.title}`} className="likeField">
-          {blog.likes}
-          <button onClick={likeClick} data-testid={`like${blog.title}`}>
+                </button>
+            </div>
+            <div style={showWhenShow} className="bloglist" data-testid="toggleHide">
+                <p>
+                    {blog.title}
+                    <button onClick={toggle}>hide</button>
+                </p>
+                <p>{blog.url}</p>
+                <p data-testid={`likeField${blog.title}`} className="likeField">
+                    {blog.likes}
+                    <button onClick={likeClick} data-testid={`like${blog.title}`}>
             like
-          </button>
-        </p>
-        <p>{blog.user.name}</p>
-        <button
-          style={sameUser}
-          onClick={removeClick}
-          data-testid={`remove${blog.title}`}
-        >
+                    </button>
+                </p>
+                <p>{blog.user.name}</p>
+                <button
+                    style={sameUser}
+                    onClick={removeClick}
+                    data-testid={`remove${blog.title}`}
+                >
           remove
-        </button>
-      </div>
-    </div>
-  )
+                </button>
+            </div>
+        </div>
+    )
 }
 
 export default Blog

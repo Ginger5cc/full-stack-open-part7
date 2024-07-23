@@ -5,11 +5,11 @@ const messageSlice = createSlice({
     name: 'message',
     initialState,
     reducers: {
-      changeMessage(state, action) {
-        return action.payload
-      },
+        changeMessage(state, action) {
+            return action.payload
+        },
     },
-  })
-  
+})
+
 export const { changeMessage } = messageSlice.actions
 export default messageSlice.reducer
