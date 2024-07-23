@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { changeMessage } from '../reducers/messageReducer'
+import { deleteBlog, addLike } from '../reducers/blogReducer'
 
-const Blog = ({ blog, remove, addLike }) => {
+const Blog = () => {
+    const id = useParams().id
+    const dispatch = useDispatch()
     const user  = useSelector(state => state.user)
-    const [showMore, setShowMore] = useState(false)
-
-    const toggle = () => {
-        setShowMore(!showMore)
-    }
+    const bloglist  = useSelector(state => state.blogs)
+    const blog = bloglist.find(n => n.id === id)
 
     const likeClick = () => {
         const blogAddlike = {
@@ -17,53 +19,78 @@ const Blog = ({ blog, remove, addLike }) => {
             url: blog.url,
             likes: blog.likes + 1,
         }
-        addLike(blog.id, blogAddlike)
+        handleUpdate(id, blogAddlike)
     }
 
     const removeClick = () => {
         if (window.confirm(`remove ${blog.title} by ${blog.author}`)) {
-            remove(blog.id, blog)
+            handleRemove(id, blog)
         }
     }
 
-    let hideWhenShow = { display: showMore ? 'none' : '' }
-    let showWhenShow = { display: showMore ? '' : 'none' }
+    const handleRemove = async (id, blogObject) => {
+        try {
+            dispatch(deleteBlog(id))
+            dispatch(changeMessage({
+                content: `Deleted ${blogObject.title}`,
+                type: 'notice',
+            }))
+            setTimeout(() => {
+                dispatch(changeMessage(null))
+            }, 5000)
+        } catch (error) {
+            console.error(error.response.data)
+            dispatch(changeMessage({ content: 'cannot delete', type: 'error' }))
+            setTimeout(() => {
+                dispatch(changeMessage(null))
+            }, 5000)
+        }
+    }
+
+    const handleUpdate = async (id, blogObject) => {
+        try {
+
+            dispatch(addLike(id, blogObject))
+            dispatch(changeMessage({
+                content: `like ${blogObject.title}`,
+                type: 'notice',
+            }))
+            setTimeout(() => {
+                dispatch(changeMessage(null))
+            }, 5000)
+        } catch (exception) {
+            console.log(exception)
+            dispatch(changeMessage({ content: exception.message, type: 'error' }))
+            setTimeout(() => {
+                dispatch(changeMessage(null))
+            }, 5000)
+        }
+    }
+
     let sameUser = { display: user.id === blog.user.id ? '' : 'none' }
 
+    const getClickableLink = link => {
+        return link.startsWith('http://') || link.startsWith('https://') ?
+            link
+            : `http://${link}`
+    }
+
     return (
-        <div data-testid="toggleElement">
-            <div
-                style={hideWhenShow}
-                className="bloglist"
-                data-testid={`toggleShow${blog.title}`}
-                role="toggleShow"
-            >
-                {blog.title} by {blog.author}
-                <button onClick={toggle} data-testid={`view${blog.title}`}>
-          View
-                </button>
-            </div>
-            <div style={showWhenShow} className="bloglist" data-testid="toggleHide">
-                <p>
-                    {blog.title}
-                    <button onClick={toggle}>hide</button>
-                </p>
-                <p>{blog.url}</p>
-                <p data-testid={`likeField${blog.title}`} className="likeField">
-                    {blog.likes}
-                    <button onClick={likeClick} data-testid={`like${blog.title}`}>
+        <div className='bloglist'>
+            <h2>{blog.title} by {blog.author}</h2>
+            <a target='_blank' rel='noopener noreferrer' href={getClickableLink(blog.url)} >{blog.url}</a>
+            <p className="likeField">
+                {blog.likes}
+                <button onClick={likeClick}>
             like
-                    </button>
-                </p>
-                <p>{blog.user.name}</p>
-                <button
-                    style={sameUser}
-                    onClick={removeClick}
-                    data-testid={`remove${blog.title}`}
-                >
-          remove
                 </button>
-            </div>
+            </p>
+            <p>added by {blog.user.name}</p>
+            <button
+                style={sameUser}
+                onClick={removeClick}>
+                    remove
+            </button>
         </div>
     )
 }

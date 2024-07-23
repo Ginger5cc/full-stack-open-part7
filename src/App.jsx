@@ -7,10 +7,13 @@ import Bloglist from './components/Bloglist'
 
 import { initializeBlogs } from './reducers/blogReducer'
 import { loginUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/userlistReducer'
+
 import LoginForm from './components/LoginForm'
 import Users from './components/Users'
 import User from './components/User'
-import { initializeUsers } from './reducers/userlistReducer'
+import Blog from './components/Blog'
+
 
 import {
     BrowserRouter as Router,
@@ -70,9 +73,9 @@ const App = () => {
 
             <Routes>
                 <Route path="/users/:id" element={<User />} />
-                <Route path="/blogs/:id" element={<Bloglist />} />
-                <Route path="/blogs" element={<Bloglist />} />
-                <Route path="/users" element={<Users />} />
+                <Route path="/blogs/:id" element={<Blog />} />
+                <Route path="/blogs/" element={<Bloglist />} />
+                <Route path="/users/" element={<Users />} />
             </Routes>
         </div>
     )
