@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { changeMessage } from '../reducers/messageReducer'
 import { deleteBlog, addLike } from '../reducers/blogReducer'
+import { createComment } from '../reducers/commentlistReducer'
 
 const Blog = () => {
     const id = useParams().id
@@ -11,6 +12,27 @@ const Blog = () => {
     const user  = useSelector(state => state.user)
     const bloglist  = useSelector(state => state.blogs)
     const blog = bloglist.find(n => n.id === id)
+    const [content, setContent] = useState('')
+    const commentlist  = useSelector(state => state.commentlist)
+    const comment = commentlist.filter(n => n.blogid === id)
+
+    const commentClick = () => {
+        console.log('click add commet')
+        const newComment = {
+            content: content,
+            blogid: blog.id
+        }
+        setContent('')
+        try {
+            dispatch(createComment(blog.id, newComment))
+        } catch (error) {
+            console.error(error.response.data)
+            dispatch(changeMessage({ content: 'cannot add comment', type: 'error' }))
+            setTimeout(() => {
+                dispatch(changeMessage(null))
+            }, 5000)
+        }
+    }
 
     const likeClick = () => {
         const blogAddlike = {
@@ -76,22 +98,39 @@ const Blog = () => {
     }
 
     return (
-        <div className='bloglist'>
-            <h2>{blog.title} by {blog.author}</h2>
-            <a target='_blank' rel='noopener noreferrer' href={getClickableLink(blog.url)} >{blog.url}</a>
-            <p className="likeField">
-                {blog.likes}
-                <button onClick={likeClick}>
-            like
+        <>
+            <div className='bloglist'>
+                <h2>{blog.title} by {blog.author}</h2>
+                <a target='_blank' rel='noopener noreferrer' href={getClickableLink(blog.url)} >{blog.url}</a>
+                <p className="likeField">
+                    {blog.likes}
+                    <button onClick={likeClick}>
+                like
+                    </button>
+                </p>
+                <p>added by {blog.user.name}</p>
+                <button
+                    style={sameUser}
+                    onClick={removeClick}>
+                        remove
                 </button>
-            </p>
-            <p>added by {blog.user.name}</p>
-            <button
-                style={sameUser}
-                onClick={removeClick}>
-                    remove
-            </button>
-        </div>
+            </div>
+            <div className='bloglist'>
+                <h3>comments</h3>
+                <div>
+                    <input
+                        type="text"
+                        value={content}
+                        name="Comment"
+                        onChange={({ target }) => setContent(target.value)}
+                    />
+                    <button onClick={commentClick} >add comment</button>
+                </div>
+                <div>
+                    {comment? comment.map( n => <li key={n.id}>{n.content}</li>) : null}
+                </div>
+            </div>
+        </>
     )
 }
 

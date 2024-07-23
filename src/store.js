@@ -6,13 +6,15 @@ import blogReducer from './reducers/blogReducer'
 import messageReducer from './reducers/messageReducer'
 import userReducer from './reducers/userReducer'
 import userlistReducer from './reducers/userlistReducer'
+import commentlistReducer from './reducers/commentlistReducer'
 import { combineReducers } from 'redux'
 
 const reducers = combineReducers({
     blogs: blogReducer,
     message: messageReducer,
     user: userReducer,
-    userlist: userlistReducer
+    userlist: userlistReducer,
+    commentlist: commentlistReducer
 })
 
 const persistConfig = {

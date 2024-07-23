@@ -19,6 +19,7 @@ import {
     BrowserRouter as Router,
     Routes, Route, Link
 } from 'react-router-dom'
+import { initializeComments } from './reducers/commentlistReducer'
 
 
 const App = () => {
@@ -32,6 +33,10 @@ const App = () => {
     useEffect ( () => {
         dispatch(initializeUsers())
     },[bloglist])
+
+    useEffect ( () => {
+        dispatch(initializeComments())
+    },[])
 
 
     useEffect(() => {
