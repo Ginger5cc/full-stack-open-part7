@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/ HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhcHB5ZmFjZSIsImlkIjoiNjY5ZTlmZjdmZjUwNmIyM2Y3YjdjMGMxIiwiaWF0IjoxNzIxNjgyNzk0LCJleHAiOjE3MjE2ODYzOTR9.ENf05H6zGxuhTP0QGKwq03AdrjEjonn8hMB82UmBCfk
+
+{
+    "title": "Blog 28",
+    "author": "testing28",
+    "url": "www.blog28.com", 
+    "likes" : 28
+}
