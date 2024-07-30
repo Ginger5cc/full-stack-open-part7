@@ -1,4 +1,4 @@
-#Full Stack Open Part 7 
+Full Stack Open Part 7 
 
 https://fullstackopen.com/en/part7
 
