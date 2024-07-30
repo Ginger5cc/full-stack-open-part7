@@ -5,6 +5,7 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 import { changeMessage } from '../reducers/messageReducer'
 import { loginUser } from '../reducers/userReducer'
+import { Button } from 'react-bootstrap'
 
 const LoginForm = () => {
     const [username, setUsername] = useState('')
@@ -53,7 +54,7 @@ const LoginForm = () => {
                     data-testid="password"
                 />
             </div>
-            <button type="submit">login</button>
+            <Button variant="primary" type="submit">login</Button>
         </form>
     )
 }

@@ -1,16 +1,18 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 
 const Users = () => {
     let userlist = useSelector(state => state.userlist)
+    userlist = userlist.filter( n => n.username !== 'root' )
     if (!userlist) {
         return null
     }
     return (
         <>
             <h2>Users</h2>
-            <table>
+            <Table striped>
                 <thead>
                     <tr>
                         <th></th>
@@ -22,9 +24,11 @@ const Users = () => {
                         <tr key={idx}>
                             <td><Link to={`/users/${n.id}`}>{n.username}</Link></td>
                             <td>{n.blogs.length}</td>
-                        </tr>)}
+                        </tr>
+                    )
+                    }
                 </tbody>
-            </table>
+            </Table>
         </>
     )
 }

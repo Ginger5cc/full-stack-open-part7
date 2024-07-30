@@ -14,6 +14,8 @@ import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 
+import { Button } from 'react-bootstrap'
+
 
 import {
     BrowserRouter as Router,
@@ -65,14 +67,14 @@ const App = () => {
     }
 
     return (
-        <div>
+        <div className='container'>
             <h2>Blogs</h2>
             <Notification />
             <form onSubmit={handleLogout}>
                 <div>
                     <Link className='menuItem' to="/blogs">blogs</Link>
                     <Link className='menuItem' to="/users">users</Link>
-                    {user.username} logged in <button type="submit">logout</button>
+                    {user.username} logged in <Button variant="primary" type="submit">logout</Button>
                 </div>
             </form>
 
